@@ -37,19 +37,18 @@ class CloneCommand extends TerminusCommand implements SiteAwareInterface, Config
      *
      * @option site_dir Custom directory for the local copy. By default, the site name is used
      * @option override Override the local copy if exists
+     * @option branch The branch to clone. Default is master
      *
      * @usage <site> Clone's a local copy into "$HOME/pantheon-local-copies"
      */
-    public function clone(string $site_id, array $options = ['site_dir' => null, 'override' => null]): string
+    public function clone(string $site_id, array $options = ['site_dir' => null, 'override' => null, 'branch' => 'master']): string
     {
         $site = $this->getSiteById($site_id);
         $env = $site->getEnvironments()->get('dev');
 
         $gitUrl = $env->connectionInfo()['git_url'] ?? null;
         $localCopyDir = $site->getLocalCopyDir($options['site_dir'] ?? null);
-
-        // @todo This value should come from somewhere else.
-        $devBranch = 'master';
+        $devBranch = $options['branch'];
 
         try {
             /** @var \Pantheon\Terminus\Helpers\LocalMachineHelper $localMachineHelper */
