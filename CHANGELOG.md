@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file. This projec
 
 ## 4.0.0-dev -
 
+
+## 4.0.0-alpha1 - 2025-03-06
+
 ### Added
 
 - Support for PHP 8.4
