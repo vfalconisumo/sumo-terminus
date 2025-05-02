@@ -339,6 +339,7 @@ EOD;
             'Pantheon\\Terminus\\Hooks\\Authorizer',
             'Pantheon\\Terminus\\Hooks\\CommandSignalHandler',
             'Pantheon\\Terminus\\Hooks\\CommandTracker',
+            'Pantheon\\Terminus\\Hooks\\Interacter',
             'Pantheon\\Terminus\\Hooks\\RoleValidator',
             'Pantheon\\Terminus\\Hooks\\SiteEnvLookup',
             'Pantheon\\Terminus\\Commands\\AliasesCommand',
