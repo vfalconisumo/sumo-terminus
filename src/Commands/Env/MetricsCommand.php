@@ -48,7 +48,7 @@ class MetricsCommand extends TerminusCommand implements SiteAwareInterface
      * @interact
      *
      * @command env:metrics
-     * @aliases metrics,alpha:env:metrics,alpha:metrics
+     * @aliases metrics
      *
      * @field-labels
      *     datetime: Period
