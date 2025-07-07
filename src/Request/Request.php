@@ -15,6 +15,7 @@ use League\Container\ContainerAwareInterface;
 use League\Container\ContainerAwareTrait;
 use Pantheon\Terminus\Config\ConfigAwareTrait;
 use Pantheon\Terminus\Exceptions\TerminusException;
+use Pantheon\Terminus\Exceptions\TerminusUnsupportedSiteException;
 use Pantheon\Terminus\Helpers\LocalMachineHelper;
 use Pantheon\Terminus\Helpers\Utility\TraceId;
 use Pantheon\Terminus\Session\SessionAwareInterface;
@@ -72,6 +73,8 @@ class Request implements
     public const ENVIRONMENT_VARIABLES = [
         'CI',
     ];
+
+    public const UNSUPPORTED_SITE_EXCEPTION_MESSAGE = 'This is not supported for this site.';
 
     protected ClientInterface $client;
 
@@ -229,7 +232,7 @@ class Request implements
                 );
             } else {
                 if (preg_match('/[2,4]0\d/', $response->getStatusCode())) {
-                    // Do not retry on 20x and 40x responses.
+                    // Do not retry on 20x or 40x responses.
                     return false;
                 }
 
@@ -438,6 +441,18 @@ class Request implements
                 $this->logger->debug('json_decode exception: {message}', [
                     'message' => $jsonException->getMessage()
                 ]);
+            }
+        }
+
+        if ($response->getStatusCode() == 409) {
+            if (!empty($decoded_body) && !empty($decoded_body->message)) {
+                // This request is expected to fail for an unsupported site, throw exception.
+                throw new TerminusUnsupportedSiteException($decoded_body->message);
+            } elseif (!empty($decoded_body) && !empty($decoded_body->reason)) {
+                // This request is expected to fail, use generic reason.
+                throw new TerminusUnsupportedSiteException(
+                    self::UNSUPPORTED_SITE_EXCEPTION_MESSAGE
+                );
             }
         }
 
