@@ -8,10 +8,22 @@ on:
       - .github/**
 
 jobs:
+  set-tag-values:
+    runs-on: ubuntu-latest
+    outputs:
+      tag_main: ${{ steps.create_tag.outputs.main }}
+      tag_patch: ${{ steps.create_tag.outputs.main }}.${{ github.run_number }}
+    steps:
+      - id: create_tag
+        run: echo "main=$(date +'%Y%m')" >> "$GITHUB_OUTPUT"
   build:
+    needs: set-tag-values
+    strategy:
+      matrix:
+        version: ["${{needs.set-tag-values.outputs.tag_main}}", "${{needs.set-tag-values.outputs.tag_patch}}"]
     runs-on: ubuntu-latest
     container:
-      image: quay.io/pantheon-public/php-ci:v8.2
+      image: quay.io/pantheon-public/php-ci@sha256:82a317e19502d7a31f327aacbeb1a3850077f3814be5b795c6d48ded523069d2
     name: Checkout & build Phar
     steps:
       - name: Checkout
@@ -28,8 +40,7 @@ jobs:
           composer require humbug/box --working-dir=$HOME/box
           export PATH=~/box/vendor/bin:$PATH
           composer phar:build
-      - name: Release
-        uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8
-        if: github.ref_type == 'tag'
-        with:
-          files: terminus.phar
+      - uses: ncipollo/release-action@bcfe5470707e8832e12347755757cec0eb3c22af
+          with:
+            artifacts: "terminus.phar"
+            bodyFile: "body.md"
