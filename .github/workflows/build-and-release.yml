@@ -15,12 +15,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - name: Full Composer Install
-        run: composer install
+        run: |
+          pecl install pcov
+          composer update
+          composer install
       - name: Validate Code
         run: composer code:lint
       - name: Phar Build
         run: |
-          pecl install pcov
           mkdir $HOME/box
           composer require humbug/box --working-dir=$HOME/box
           export PATH=~/box/vendor/bin:$PATH
