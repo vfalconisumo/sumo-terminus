@@ -16,8 +16,8 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - name: Full Composer Install
         run: |
-          apt update
-          apt install php-pcov
+          sudo apt update
+          sudo apt install -y php-pcov
           composer update
           composer install
       - name: Validate Code
