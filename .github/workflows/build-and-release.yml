@@ -10,6 +10,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: quay.io/pantheon-public/php-ci:v8.2
     name: Checkout & build Phar
     steps:
       - name: Checkout
