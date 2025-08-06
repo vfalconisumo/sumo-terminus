@@ -18,12 +18,9 @@ jobs:
         run: echo "main=$(date +'%Y%m')" >> "$GITHUB_OUTPUT"
   build:
     needs: set-tag-values
-    strategy:
-      matrix:
-        version: ["${{needs.set-tag-values.outputs.tag_main}}", "${{needs.set-tag-values.outputs.tag_patch}}"]
     runs-on: ubuntu-latest
     container:
-      image: quay.io/pantheon-public/php-ci@sha256:82a317e19502d7a31f327aacbeb1a3850077f3814be5b795c6d48ded523069d2
+      image: quay.io/pantheon-public/php-ci@sha256:58b7be780fb1e0bba5a40c12ee4937e5e7da778065b30d2f5113c3445a83967f
     name: Checkout & build Phar
     steps:
       - name: Checkout
@@ -43,4 +40,4 @@ jobs:
       - uses: ncipollo/release-action@bcfe5470707e8832e12347755757cec0eb3c22af
         with:
           artifacts: "terminus.phar"
-          tag: ${{ matrix.version }}
+          tag: ${{needs.set-tag-values.outputs.tag_patch}}
