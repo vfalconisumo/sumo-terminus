@@ -41,6 +41,6 @@ jobs:
           export PATH=~/box/vendor/bin:$PATH
           composer phar:build
       - uses: ncipollo/release-action@bcfe5470707e8832e12347755757cec0eb3c22af
-          with:
-            artifacts: "terminus.phar"
-            bodyFile: "body.md"
+        with:
+          artifacts: "terminus.phar"
+          tag: ${{ matrix.version }}
