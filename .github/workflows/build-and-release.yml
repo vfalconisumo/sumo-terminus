@@ -20,7 +20,7 @@ jobs:
     needs: set-tag-values
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
     container:
       image: quay.io/pantheon-public/php-ci@sha256:58b7be780fb1e0bba5a40c12ee4937e5e7da778065b30d2f5113c3445a83967f
     name: Checkout & build Phar
