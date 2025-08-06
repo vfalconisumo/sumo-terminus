@@ -1,0 +1,31 @@
+name: Build and release
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['main']
+    paths-ignore:
+      - .github/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Checkout & build Phar
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Full Composer Install
+        run: composer install
+      - name: Validate Code
+        run: composer code:lint
+      - name: Phar Build
+        run: |
+          mkdir $HOME/box
+          composer require humbug/box --working-dir=$HOME/box
+          export PATH=~/box/vendor/bin:$PATH
+          composer phar:build
+      - name: Release
+        uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8
+        if: github.ref_type == 'tag'
+        with:
+          files: terminus.phar
