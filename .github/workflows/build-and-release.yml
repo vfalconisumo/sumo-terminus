@@ -38,6 +38,8 @@ jobs:
           export PATH=~/box/vendor/bin:$PATH
           composer phar:build
       - uses: ncipollo/release-action@bcfe5470707e8832e12347755757cec0eb3c22af
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           artifacts: "terminus.phar"
           tag: ${{needs.set-tag-values.outputs.tag_patch}}
