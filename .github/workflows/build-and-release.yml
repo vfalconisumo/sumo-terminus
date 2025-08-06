@@ -17,6 +17,7 @@ jobs:
       - name: Full Composer Install
         run: |
           sudo pecl install pcov
+          touch /etc/php/8.3/cli/conf.d/20-pcov.ini
           composer update
           composer install
       - name: Validate Code
